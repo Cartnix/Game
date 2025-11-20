@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import sqlite3
 
@@ -49,8 +50,6 @@ def registration_user(user: UserClass):
     if unique_user:
         raise HTTPException(status_code=400, detail="This username is already exists")
     cursor.execute("INSERT INTO users(username, password) VALUES (?, ?)", (user.username, user.password))
-
     connect.commit()
-    cursor.close()
     connect.close()
     return {"message": f"user {user.username} added"}
