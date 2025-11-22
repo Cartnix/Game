@@ -1,10 +1,10 @@
-import AutorisationForm from "./form"
+import MainPage from "./pages/MainPage"
 
 function App() {
 
   return (
     <>
-      <AutorisationForm />
+      <MainPage />
     </>
   )
 }
