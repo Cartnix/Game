@@ -1,10 +1,16 @@
 import { useState } from "react";
 import ButtonUI from "../shared/ui/ButtonUI";
+import LoginFormPortal from "../widgets/ui/AutorisationForm";
 import RegistrationFormPortal from "../widgets/ui/RegistrationForm";
 
 export default function MainPage() {
 
-    const [isOpen, setOpen] = useState(false)
+    const [isOpen, setOpen] = useState<boolean>(false)
+    const [isAutorisation, setAutorisation] = useState<boolean>(true)
+
+    const switchForm = () => {
+        setAutorisation(prev => !prev)
+    }
 
     return (
         <main className="bg-[url('/mainBG.jpeg')] bg-cover bg-no-repeat w-full h-full min-h-screen min-w-screen items-center justify-center flex flex-col gap-8">
@@ -17,8 +23,14 @@ export default function MainPage() {
                 PyQuest
             </h1>
 
-            <ButtonUI text="PLAY !" onClick={() => setOpen(true)}/>
-            {isOpen && <RegistrationFormPortal onClose={() => setOpen(false)} />}
+            <ButtonUI text="PLAY !" onClick={() => setOpen(true)} />
+
+            {isOpen && (
+                isAutorisation ?
+                    <LoginFormPortal onClose={() => setOpen(false)} switchForm={switchForm} /> :
+                    <RegistrationFormPortal onClose={() => setOpen(false)} switchForm={switchForm} />
+
+            )}
         </main>
     )
 }

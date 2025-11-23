@@ -2,23 +2,40 @@ import { useState } from "react";
 import ReactDOM from "react-dom";
 
 interface LoginFormProps {
-    onClose: () => void;
+    onClose: () => void,
+    switchForm: () => void;
 }
 
-export default function LoginFormPortal({ onClose }: LoginFormProps) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+interface UserI {
+    id: number,
+    username: string,
+    password: string,
+    email: string
+}
+
+export default function LoginFormPortal({ onClose, switchForm }: LoginFormProps) {
+    const [enteredUsername, setUsername] = useState("");
+    const [enteredPassword, setPassword] = useState("");
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const RES = await fetch("http://127.0.0.1:8000/login", {
-            method: "POST",
+        const RES = await fetch("http://127.0.0.1:8000/users", {
+            method: "GET",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ username, password }),
         });
         const data = await RES.json();
-        console.log(data);
-        onClose();
+        const usersArray: UserI[] = data.users;
+        if (usersArray.some(user => user.username === enteredUsername)) {
+            if (usersArray.some(user => user.password === enteredPassword)) {
+                console.log("U're in")
+                onClose();
+            } else {
+                console.log("Wrong password")
+
+            }
+        } else {
+            console.log("This user does not exists")
+        }
     };
 
     return ReactDOM.createPortal(
@@ -40,7 +57,7 @@ export default function LoginFormPortal({ onClose }: LoginFormProps) {
                 <input
                     type="text"
                     placeholder="Username or Email"
-                    value={username}
+                    value={enteredUsername}
                     onChange={(e) => setUsername(e.target.value)}
                     className="px-4 py-3 rounded-lg bg-[#2C1F1F] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                 />
@@ -48,7 +65,7 @@ export default function LoginFormPortal({ onClose }: LoginFormProps) {
                 <input
                     type="password"
                     placeholder="Password"
-                    value={password}
+                    value={enteredPassword}
                     onChange={(e) => setPassword(e.target.value)}
                     className="px-4 py-3 rounded-lg bg-[#2C1F1F] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
                 />
@@ -65,7 +82,7 @@ export default function LoginFormPortal({ onClose }: LoginFormProps) {
                     <button
                         type="button"
                         className="hover:text-white transition"
-                        onClick={() => alert("Go to registration page")}
+                        onClick={switchForm}
                     >
                         No account? Sign up
                     </button>
@@ -76,14 +93,6 @@ export default function LoginFormPortal({ onClose }: LoginFormProps) {
                     className="mt-4 bg-linear-to-r from-purple-500 to-pink-500 hover:from-pink-500 hover:to-purple-500 text-white font-semibold py-3 rounded-xl shadow-lg transition transform hover:scale-105"
                 >
                     Login
-                </button>
-
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="mt-2 text-sm text-gray-300 hover:text-white transition self-center"
-                >
-                    Cancel
                 </button>
             </form>
         </div>,

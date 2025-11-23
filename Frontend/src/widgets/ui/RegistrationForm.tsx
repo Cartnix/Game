@@ -2,10 +2,11 @@ import { useState } from "react";
 import ReactDOM from "react-dom";
 
 interface RegistrationFormProps {
-    onClose: () => void;
+    onClose: () => void,
+    switchForm: () => void;
 }
 
-export default function RegistrationFormPortal({ onClose }: RegistrationFormProps) {
+export default function RegistrationFormPortal({ onClose, switchForm }: RegistrationFormProps) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -42,6 +43,18 @@ export default function RegistrationFormPortal({ onClose }: RegistrationFormProp
                 className="relative z-10 flex flex-col gap-4 bg-linear-to-br from-[#413030] to-[#5C3B3B] p-8 rounded-3xl shadow-2xl w-[350px] sm:w-[400px]"
                 onClick={(e) => e.stopPropagation()}
             >
+                <div className="absolute top-4 left-4 cursor-pointer text-white text-xl"
+                onClick={switchForm}>
+                    ❮
+                </div>
+
+                <div
+                    className="absolute top-4 right-4 cursor-pointer text-white text-2xl font-bold"
+                    onClick={onClose}
+                >
+                    ×
+                </div>
+
                 <h2 className="text-2xl font-semibold text-white text-center mb-4">
                     Registration
                 </h2>
@@ -89,13 +102,6 @@ export default function RegistrationFormPortal({ onClose }: RegistrationFormProp
                     Register
                 </button>
 
-                <button
-                    type="button"
-                    onClick={onClose}
-                    className="mt-2 text-sm text-gray-300 hover:text-white transition self-center cursor-pointer"
-                >
-                    Cancel
-                </button>
             </form>
         </div>,
         document.getElementById("modal_root")!
