@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ReactDOM from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
     onClose: () => void,
@@ -14,6 +15,7 @@ interface UserI {
 }
 
 export default function LoginFormPortal({ onClose, switchForm }: LoginFormProps) {
+    const navigate = useNavigate()
     const [enteredUsername, setUsername] = useState("");
     const [enteredPassword, setPassword] = useState("");
 
@@ -29,12 +31,13 @@ export default function LoginFormPortal({ onClose, switchForm }: LoginFormProps)
             if (usersArray.some(user => user.password === enteredPassword)) {
                 console.log("U're in")
                 onClose();
+                navigate('/levels')
             } else {
-                console.log("Wrong password")
+                alert("Wrong password")
 
             }
         } else {
-            console.log("This user does not exists")
+            alert("This user does not exists")
         }
     };
 

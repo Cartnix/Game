@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ButtonUI from "../shared/ui/ButtonUI";
-import LoginFormPortal from "../widgets/ui/AutorisationForm";
-import RegistrationFormPortal from "../widgets/ui/RegistrationForm";
+import LoginFormPortal from "../features/Autorisation/AutorisationForm";
+import RegistrationFormPortal from "../features/Registration/RegistrationForm";
 
 export default function MainPage() {
 
