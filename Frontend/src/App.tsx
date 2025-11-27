@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
-import LevelPage from "./pages/LevelPage"
 import MainPage from "./pages/MainPage"
+import MapPage from "./pages/MapPage"
+import LevelPage from "./pages/LevelPage"
 
 function App() {
 
@@ -8,7 +9,8 @@ function App() {
     <>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/levels" element={<LevelPage />} />
+          <Route path="/levels" element={<MapPage />} />
+          <Route path="/level/:id" element={<LevelPage/>} />
         </Routes>
     </>
   )
