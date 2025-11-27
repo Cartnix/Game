@@ -20,12 +20,12 @@ export default function LevelCard({ id, title, difficult, scores, technologies }
             <h4 className="text-xl font-medium text-gray-800 mb-4">{title}</h4>
 
             <div className="mb-5">
-                <p className="text-gray-600 text-sm mb-1">Scores</p>
+                <p className="text-gray-600 text-sm mb-1">Очки</p>
                 <span className="text-3xl font-bold text-blue-600">{scores}</span>
             </div>
 
             <div className="mb-7">
-                <p className="text-gray-600 text-sm mb-2">Skills</p>
+                <p className="text-gray-600 text-sm mb-2">Технологии</p>
                 <div className="flex flex-wrap gap-2">
                     {technologies.map((tech, index) => (
                         <span

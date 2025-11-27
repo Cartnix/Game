@@ -6,7 +6,7 @@ import sqlite3
 
 app = FastAPI()
 
-origins = ["http://localhost:5173"]
+origins = ["https://game-zh8t.vercel.app/"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
