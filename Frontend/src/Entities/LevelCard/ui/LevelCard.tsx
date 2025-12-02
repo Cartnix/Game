@@ -1,6 +1,7 @@
+import ButtonUI from "../../../shared/ui/ButtonUI";
 import type { LevelCardI } from "../model/LevelCardI";
 
-export default function LevelCard({ id, title, difficult, scores, technologies }: LevelCardI) {
+export default function LevelCard({ id, title, difficult, scores, technologies, onClick}: LevelCardI) {
     const difficultyColors: Record<string, string> = {
         Easy: "bg-green-500",
         Medium: "bg-yellow-500",
@@ -37,7 +38,8 @@ export default function LevelCard({ id, title, difficult, scores, technologies }
                     ))}
                 </div>
             </div>
-            {/* <ButtonUI text="Enter the level!"/> */}
+
+            <ButtonUI text="Enter the level!" onClick={onClick}/>
         </div>
     );
 }

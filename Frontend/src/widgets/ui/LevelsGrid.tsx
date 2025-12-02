@@ -1,12 +1,14 @@
 import { useState } from "react";
-import type { LevelCardI } from "../../Entities/model/LevelCardI";
-import { LevelsData } from "../../Entities/model/LevelsData";
-import LevelCard from "../../Entities/ui/LevelCard";
+import type { LevelCardI } from "../../Entities/LevelCard/model/LevelCardI";
+import { LevelsData } from "../../Entities/LevelCard/model/LevelsData";
+import LevelCard from "../../Entities/LevelCard/ui/LevelCard";
+import { useNavigate } from "react-router-dom";
 
 export default function LevelsGrid() {
-  const [currentLevel, setCurrentLevel] = useState<LevelCardI | null>(null);
+  const [currentLevel, setCurrentLevel] = useState<Omit<LevelCardI, 'onClick'> | null>(null);
+  const navigate = useNavigate();
 
-  const openLevel = (level: LevelCardI) => {
+  const openLevel = (level: Omit<LevelCardI, 'onClick'>) => {
     setCurrentLevel(level);
   };
 
@@ -61,6 +63,7 @@ export default function LevelsGrid() {
               difficult={currentLevel.difficult}
               scores={currentLevel.scores}
               technologies={currentLevel.technologies}
+              onClick={() => navigate(`/level/${currentLevel.id}`)}
             />
           </div>
         </div>
