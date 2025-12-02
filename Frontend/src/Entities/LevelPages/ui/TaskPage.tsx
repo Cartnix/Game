@@ -1,13 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LevelsData } from "../../LevelCard/model/LevelsData";
+import { Play, Loader2, CheckCircle, XCircle, Terminal } from "lucide-react";
 
 export default function TaskPage() {
   const { id } = useParams<{ id: string }>();
   const level = LevelsData.find(l => l.id === Number(id));
   const navigate = useNavigate();
 
-  const [answer, setAnswer] = useState("");
+  const [code, setCode] = useState("");
+  const [output, setOutput] = useState("");
+  const [error, setError] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [pyodideReady, setPyodideReady] = useState(false);
+  
+  const pyodideRef = useRef<any>(null);
+
+  useEffect(() => {
+    const loadPyodide = async () => {
+      try {
+        const pyodide = await (window as any).loadPyodide({
+          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
+        });
+        pyodideRef.current = pyodide;
+        setPyodideReady(true);
+      } catch (err: any) {
+        setError("Ошибка загрузки Python: " + err.message);
+      }
+    };
+
+    loadPyodide();
+  }, []);
+
+  const runCode = async () => {
+    if (!pyodideRef.current) {
+      setError("Python еще не загружен");
+      return;
+    }
+
+    setIsRunning(true);
+    setOutput("");
+    setError("");
+
+    try {
+      const pyodide = pyodideRef.current;
+      
+      let stdout = "";
+      pyodide.setStdout({ 
+        batched: (text: string) => { stdout += text + "\n"; }
+      });
+
+      await pyodide.runPythonAsync(code);
+      
+      setOutput(stdout || "Код выполнен успешно (без вывода)");
+      
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsRunning(false);
+    }
+  };
 
   if (!level) return <div className="p-6 text-center">Уровень не найден</div>;
 
@@ -21,23 +73,12 @@ export default function TaskPage() {
   return (
     <div className="min-h-screen w-full bg-gray-100 flex">
       
-      {/* Левая половина — панель с задачей */}
       <div className="w-1/2 min-w-[450px] bg-white shadow-2xl border-r border-gray-200 p-8 overflow-y-auto">
         
         <div className="flex justify-between items-center mb-6 relative">
           <button
             onClick={() => navigate(-1)}
-            className="
-              flex absolute -left-2 top-0 items-center gap-2
-              px-4 py-2
-              rounded-xl
-              bg-gray-200 text-gray-800
-              font-medium
-              shadow-md
-              hover:bg-gray-300
-              active:bg-gray-400
-              transition
-            "
+            className="flex absolute -left-2 top-0 items-center gap-2 px-4 py-2 rounded-xl bg-gray-200 text-gray-800 font-medium shadow-md hover:bg-gray-300 active:bg-gray-400 transition"
           >
             ← Назад
           </button>
@@ -45,8 +86,7 @@ export default function TaskPage() {
           <h1 className="text-3xl font-bold text-gray-900 mx-auto">{level.title}</h1>
 
           <span
-            className={`${difficultyColors[level.difficult] || "bg-gray-400"} 
-              px-4 py-1.5 rounded-full text-white font-semibold shadow-md`}
+            className={`${difficultyColors[level.difficult] || "bg-gray-400"} px-4 py-1.5 rounded-full text-white font-semibold shadow-md`}
           >
             {level.difficult}
           </span>
@@ -73,27 +113,87 @@ export default function TaskPage() {
           </p>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-4 flex items-center gap-2">
+          {!pyodideReady ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+              <span className="text-sm text-gray-600">Загрузка Python...</span>
+            </>
+          ) : (
+            <>
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span className="text-sm text-green-600">Python готов</span>
+            </>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <h2 className="font-semibold text-gray-700 mb-2 text-lg flex items-center gap-2">
+            <Terminal className="w-5 h-5" />
+            Ваш код:
+          </h2>
           <textarea
-            className="text-black w-full border border-gray-300 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-40"
-            placeholder="Введите ваш ответ здесь..."
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
+            className="w-full border-2 border-gray-300 rounded-xl p-4 font-mono text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none h-64 bg-gray-50"
+            placeholder="Напишите ваш Python код здесь..."
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            spellCheck={false}
           />
         </div>
 
         <button
-          className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 active:bg-blue-800 transition shadow-lg"
+          onClick={runCode}
+          disabled={!pyodideReady || isRunning}
+          className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 active:bg-blue-800 transition shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
-          Submit
+          {isRunning ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Выполняется...
+            </>
+          ) : (
+            <>
+              <Play className="w-5 h-5" />
+              Запустить код
+            </>
+          )}
         </button>
       </div>
 
-      {/* Правая половина — игровая зона */}
-      <div className="w-1/2 bg-[#0d1021] flex items-center justify-center">
-        <span className="text-white/30 text-lg select-none">Тут будет игра…</span>
+      <div className="w-1/2 bg-[#0d1021] p-8 overflow-y-auto">
+        <h2 className="text-2xl font-bold text-white mb-6">Результаты</h2>
+
+        {output && (
+          <div className="mb-6 bg-gray-900 rounded-xl p-4 border border-gray-700">
+            <h3 className="text-green-400 font-semibold mb-2 flex items-center gap-2">
+              <Terminal className="w-4 h-4" />
+              Вывод программы:
+            </h3>
+            <pre className="text-gray-300 text-sm font-mono whitespace-pre-wrap">
+              {output}
+            </pre>
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-6 bg-red-900/30 rounded-xl p-4 border border-red-500">
+            <h3 className="text-red-400 font-semibold mb-2 flex items-center gap-2">
+              <XCircle className="w-4 h-4" />
+              Ошибка:
+            </h3>
+            <pre className="text-red-300 text-sm font-mono whitespace-pre-wrap">
+              {error}
+            </pre>
+          </div>
+        )}
+
+        {!output && !error && (
+          <div className="text-center text-gray-500 mt-12">
+            <Terminal className="w-16 h-16 mx-auto mb-4 opacity-30" />
+            <p>Запустите код, чтобы увидеть результаты</p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
-
