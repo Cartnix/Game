@@ -1,23 +1,26 @@
 export const LevelsData = [
   {
     id: 1,
-    title: 'Intro',
+    title: 'Array Sum',
     difficult: 'Easy',
     scores: 250,
-    technologies: ['array', 'stack', 'Dynamic Programming']
+    technologies: ['array', 'iteration', 'basic math'],
+    task:'У тебя есть массив целых чисел. Напиши функцию, которая возвращает сумму всех чисел в массиве.' ,
   },
   { 
     id: 2,
-    title: 'Test Level 2',
+    title: 'Maximum in Array',
     difficult: 'Medium',
     scores: 400,
-    technologies: ['queue', 'recursion', 'hashmap']
+    technologies: ['array', 'iteration', 'comparison'],
+    task: 'Дан массив чисел nums. Напишите функцию, которая возвращает наибольшее число в массиве.',
   },
   {
     id: 3,
-    title: 'Test Level 3',
+    title: 'Palindrome Check',
     difficult: 'Hard',
     scores: 600,
-    technologies: ['graph', 'dfs', 'bfs', 'dp']
+    technologies: ['string', 'two pointers', 'string manipulation'],
+    task: 'Напишите функцию, которая проверяет, является ли строка s палиндромом. Палиндром — это строка, которая читается одинаково слева направо и справа налево. Игнорируйте пробелы и регистр букв.'
   }
 ];
