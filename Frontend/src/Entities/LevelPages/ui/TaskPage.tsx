@@ -10,12 +10,12 @@ export default function TaskPage() {
   const level = LevelsData.find(l => l.id === Number(id));
   const navigate = useNavigate();
   const [code, setCode] = useState("");
-  const { output, error, isRunning,pyodideReady, runCode} = usePyodide();
+  const { output, error, isRunning, pyodideReady, runCode } = usePyodide();
 
   const HandleRunCode = () => {
     runCode(code)
   }
-  
+
   if (!level) return <div className="p-6 text-center">Уровень не найден</div>;
 
   const difficultyColors: Record<string, string> = {
@@ -27,9 +27,9 @@ export default function TaskPage() {
 
   return (
     <div className="min-h-screen w-full bg-gray-100 flex">
-      
+
       <div className="w-1/2 min-w-[450px] bg-white shadow-2xl border-r border-gray-200 p-8 overflow-y-auto">
-        
+
         <div className="flex justify-between items-center mb-6 relative">
           <button
             onClick={() => navigate(-1)}
@@ -114,13 +114,7 @@ export default function TaskPage() {
           )}
         </button>
       </div>
-
-      <div className="w-1/2 bg-[#0d1021] p-8 overflow-y-auto">
-        <h2 className="text-2xl font-bold text-white mb-6">Результаты</h2>
-
-          <CodeOutput output={output} error={error}/>
-          
-      </div>
+      <CodeOutput output={output} error={error} />
     </div>
   );
 }

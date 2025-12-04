@@ -1,4 +1,5 @@
 import { Terminal, XCircle } from "lucide-react";
+import Countdown from "../../../../features/Timer/ui/Timer";
 
 interface CodeOutputProps {
   output: string;
@@ -6,7 +7,6 @@ interface CodeOutputProps {
 }
 
 export const CodeOutput = ({ output, error }: CodeOutputProps) => {
-
   return (
     <div className="w-1/2 bg-[#0d1021] p-8 overflow-y-auto">
       <h2 className="text-2xl font-bold text-white mb-6">Результаты</h2>
@@ -39,6 +39,7 @@ export const CodeOutput = ({ output, error }: CodeOutputProps) => {
         <div className="text-center text-gray-500 mt-12">
           <Terminal className="w-16 h-16 mx-auto mb-4 opacity-30" />
           <p>Запустите код, чтобы увидеть результаты</p>
+          <Countdown start={10}/>
         </div>
       )}
     </div>
