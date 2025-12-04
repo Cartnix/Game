@@ -1,66 +1,20 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LevelsData } from "../../LevelCard/model/LevelsData";
 import { Play, Loader2, CheckCircle, XCircle, Terminal } from "lucide-react";
+import usePyodide from "../../../features/usePyodide";
 
 export default function TaskPage() {
   const { id } = useParams<{ id: string }>();
   const level = LevelsData.find(l => l.id === Number(id));
   const navigate = useNavigate();
-
   const [code, setCode] = useState("");
-  const [output, setOutput] = useState("");
-  const [error, setError] = useState("");
-  const [isRunning, setIsRunning] = useState(false);
-  const [pyodideReady, setPyodideReady] = useState(false);
+  const { output, error, isRunning,pyodideReady, runCode} = usePyodide();
+
+  const HandleRunCode = () => {
+    runCode(code)
+  }
   
-  const pyodideRef = useRef<any>(null);
-
-  useEffect(() => {
-    const loadPyodide = async () => {
-      try {
-        const pyodide = await (window as any).loadPyodide({
-          indexURL: "https://cdn.jsdelivr.net/pyodide/v0.24.1/full/"
-        });
-        pyodideRef.current = pyodide;
-        setPyodideReady(true);
-      } catch (err: any) {
-        setError("Ошибка загрузки Python: " + err.message);
-      }
-    };
-
-    loadPyodide();
-  }, []);
-
-  const runCode = async () => {
-    if (!pyodideRef.current) {
-      setError("Python еще не загружен");
-      return;
-    }
-
-    setIsRunning(true);
-    setOutput("");
-    setError("");
-
-    try {
-      const pyodide = pyodideRef.current;
-      
-      let stdout = "";
-      pyodide.setStdout({ 
-        batched: (text: string) => { stdout += text + "\n"; }
-      });
-
-      await pyodide.runPythonAsync(code);
-      
-      setOutput(stdout || "Код выполнен успешно (без вывода)");
-      
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setIsRunning(false);
-    }
-  };
-
   if (!level) return <div className="p-6 text-center">Уровень не найден</div>;
 
   const difficultyColors: Record<string, string> = {
@@ -142,7 +96,7 @@ export default function TaskPage() {
         </div>
 
         <button
-          onClick={runCode}
+          onClick={HandleRunCode}
           disabled={!pyodideReady || isRunning}
           className="w-full px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 active:bg-blue-800 transition shadow-lg disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
