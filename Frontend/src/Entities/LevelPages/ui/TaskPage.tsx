@@ -2,18 +2,20 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { LevelsData } from "../../LevelCard/model/LevelsData";
 import { Play, Loader2, CheckCircle, Terminal } from "lucide-react";
-import usePyodide from "../../../features/usePyodide";
+import usePyodide from "../../../features/Pyodide/usePyodide";
 import { CodeOutput } from "../../../widgets/ui/CodeEditor/ui/CodeOutput";
 
 export default function TaskPage() {
   const { id } = useParams<{ id: string }>();
   const level = LevelsData.find(l => l.id === Number(id));
+  const testcases = level?.testcases || [];
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const { output, error, isRunning, pyodideReady, runCode } = usePyodide();
 
   const HandleRunCode = () => {
-    runCode(code)
+    console.debug('Running code with testcases:', testcases);
+    runCode(code, testcases)
   }
 
   if (!level) return <div className="p-6 text-center">Уровень не найден</div>;
