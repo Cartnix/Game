@@ -7,7 +7,7 @@ export const LevelsData = [
     difficult: 'Easy',
     scores: 250,
     technologies: ['array', 'iteration', 'basic math'],
-    task:'У тебя есть массив целых чисел. Напиши функцию, которая возвращает сумму всех чисел в массиве.' ,
+    task:'У тебя есть две целых числа. Напиши функцию, которая возвращает сумму этих чисел.' ,
     testcases: TestCaseArray,
   },
   { 

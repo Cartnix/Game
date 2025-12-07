@@ -11,10 +11,12 @@ export default function TaskPage() {
   const testcases = level?.testcases || [];
   const navigate = useNavigate();
   const [code, setCode] = useState("");
+  const [hasRun, setHasRun] = useState(false);
   const { output, error, isRunning, pyodideReady, runCode } = usePyodide();
 
   const HandleRunCode = () => {
     console.debug('Running code with testcases:', testcases);
+    setHasRun(true);
     runCode(code, testcases)
   }
 
@@ -30,7 +32,7 @@ export default function TaskPage() {
   return (
     <div className="min-h-screen w-full bg-gray-100 flex">
 
-      <div className="w-1/2 min-w-[450px] bg-white shadow-2xl border-r border-gray-200 p-8 overflow-y-auto">
+      <div className="w-full lg:w-1/2 bg-white shadow-2xl border-r border-gray-200 p-8 overflow-y-auto">
 
         <div className="flex justify-between items-center mb-6 relative">
           <button
@@ -115,8 +117,13 @@ export default function TaskPage() {
             </>
           )}
         </button>
+        {/* Результаты показываем внизу левой панели только после запуска */}
+        {hasRun && (
+          <div className="mt-6">
+            <CodeOutput output={output} error={error} />
+          </div>
+        )}
       </div>
-      <CodeOutput output={output} error={error} />
     </div>
   );
 }

@@ -15,6 +15,35 @@ export default function usePyodide() {
     const [isRunning, setIsRunning] = useState(false);
     const [pyodideReady, setPyodideReady] = useState(false);
     const [testResults, setTestResults] = useState<TestResult[]>([]);
+
+    const parseError = (errMessage: string): string => {
+        // Найти позицию первого File "<exec>"
+        const execFileMatch = errMessage.match(/File "<exec>", line \d+/);
+        if (!execFileMatch) {
+            // Если нет "<exec>", вернуть последние 3 строки
+            return errMessage.split('\n').slice(-3).join('\n').trim();
+        }
+
+        // Получить индекс, с которого начинается File "<exec>"
+        const startIdx = errMessage.indexOf(execFileMatch[0]);
+        const relevantPart = errMessage.substring(startIdx);
+        
+        // Взять только нужные строки (до конца ошибки)
+        const lines = relevantPart.split('\n');
+        const result: string[] = [];
+        
+        for (let i = 0; i < Math.min(lines.length, 10); i++) {
+            const line = lines[i];
+            result.push(line);
+            
+            // Остановиться после строки с типом ошибки
+            if (line.match(/^(SyntaxError|ValueError|TypeError|NameError|KeyError|IndexError|AttributeError|RuntimeError|Exception):/)) {
+                break;
+            }
+        }
+        
+        return result.join('\n').trim();
+    };
     
     useEffect(() => {
         const loadPyodide = async () => {
@@ -135,20 +164,22 @@ print('__TEST_RESULTS_END__')
                         
                         const passedCount = results.filter((r: TestResult) => r.passed).length;
                         setOutput(`Тесты: ${passedCount}/${results.length} пройдено`);
-                    } catch (parseErr) {
-                        setError("Ошибка парсинга результатов тестов");
+                    } catch (parseErr: any) {
+                        const shortError = parseError(parseErr.message || String(parseErr));
+                        setError(shortError);
                     }
                 } else {
                     setOutput(stdout);
                 }
             }
 
-        } catch (err: any) {
-            setError(err.message || String(err));
-        } finally {
-            setIsRunning(false);
-        }
-    };
+            } catch (err: any) {
+                const shortError = parseError(err.message || String(err));
+                setError(shortError);
+            } finally {
+                setIsRunning(false);
+            }
+        };
 
     return { output, error, isRunning, pyodideReady, runCode, testResults }
 }

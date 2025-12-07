@@ -8,7 +8,7 @@ interface CodeOutputProps {
 
 export const CodeOutput = ({ output, error }: CodeOutputProps) => {
   return (
-    <div className="w-1/2 bg-[#0d1021] p-8 overflow-y-auto">
+    <div className="w-full bg-[#0d1021] p-8 overflow-y-auto">
       <h2 className="text-2xl font-bold text-white mb-6">Результаты</h2>
 
       {output && (

@@ -1,10 +1,10 @@
-import LevelsGrid from "../widgets/ui/LevelsGrid";
+import LevelMap from "../widgets/ui/LevelMap";
 
 export default function MapPage()
 {
     return (
-        <main className=" relative bg-[url(LevelsBG.jpg)] bg-cover bg-no-repeat min-h-screen flex justify-center">
-           <LevelsGrid/>
+        <main className="relative w-full min-h-screen">
+           <LevelMap/>
         </main>
     )
 }
