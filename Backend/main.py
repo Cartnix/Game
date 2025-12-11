@@ -3,10 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import sqlite3
+import re
+
+pattern = r"! @ # $ % ^ & * ( ) _ + - ="
 
 app = FastAPI()
 
-origins = ["http://localhost:5173"]
+origins = ["https://game-zh8t.vercel.app/","http://localhost:5173"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -51,6 +54,14 @@ def registration_user(user: UserClass):
     unique_user = cursor.fetchone()
     if unique_user:
         raise HTTPException(status_code=400, detail="This username is already exists")
+    if(len(user.password) <= 8):
+        raise HTTPException(status_code=400, detail="Your password should contain 9  or more numbers")
+    if not re.match(pattern, user.username):
+        raise HTTPException(
+            status_code=400,
+            detail="Username should contain any unique symbol"
+        )
+            
     cursor.execute("INSERT INTO users(username, password, email) VALUES (?, ?, ?)", (user.username, user.password, user.email))
     connect.commit()
     connect.close()

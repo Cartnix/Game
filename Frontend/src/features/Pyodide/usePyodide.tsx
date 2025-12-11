@@ -91,11 +91,9 @@ import json
 import sys
 import types
 
-# Загружаем тесты
 _tests = json.loads('''${testsJson}''')
 results = []
 
-# Находим функции, определённые пользователем
 _user_functions = []
 for name in dir():
     obj = globals()[name]
@@ -107,7 +105,6 @@ if not _user_functions:
 
 fn = globals()[_user_functions[0]]
 
-# Запускаем тесты
 for tc in _tests:
     inp = tc.get('input')
     expected = tc.get('expected')

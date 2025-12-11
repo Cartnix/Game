@@ -3,28 +3,17 @@ import { LevelsData } from "../../Entities/LevelCard/model/LevelsData";
 import { useNavigate } from "react-router-dom";
 import type { LevelCardI } from "../../Entities/LevelCard/model/LevelCardI";
 
-/**
- * LevelMap: интерактивная карта с героем, движущимся по дорожке
- * 
- * Как настроить координаты точек:
- * 1. Откройте карту (newBg.avif) в браузере и определите размеры (обычно проверяется dev tools)
- * 2. Для каждого уровня найдите X, Y координату на дорожке (в процентах или пикселях)
- * 3. Обновите массив `levelPositions` ниже
- * 4. Координаты (x, y) в относительных единицах (0-100 для % от ширины/высоты контейнера)
- */
 
 interface LevelPosition {
   levelId: number;
-  x: number; // % от ширины контейнера
-  y: number; // % от высоты контейнера
+  x: number;
+  y: number;
 }
 
-// TODO: Настройте эти координаты в зависимости от вашей дорожки на карте
-// Пример: уровень 1 на 10% слева и 20% сверху
 const levelPositions: LevelPosition[] = [
-  { levelId: 1, x: 10, y: 20 },
+  { levelId: 1, x: 10, y: 40 },
   { levelId: 2, x: 30, y: 40 },
-  { levelId: 3, x: 60, y: 35 },
+  { levelId: 3, x: 50, y: 45 },
 ];
 
 export default function LevelMap() {
