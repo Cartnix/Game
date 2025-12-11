@@ -1,18 +1,9 @@
 import { useState } from "react";
 import ReactDOM from "react-dom";
 import { useNavigate } from "react-router-dom";
+import type { LoginFormProps, UserI } from "./model/AutorisationFormI";
 
-interface LoginFormProps {
-    onClose: () => void,
-    switchForm: () => void;
-}
 
-interface UserI {
-    id: number,
-    username: string,
-    password: string,
-    email: string
-}
 
 export default function LoginFormPortal({ onClose, switchForm }: LoginFormProps) {
     const navigate = useNavigate()
@@ -42,7 +33,7 @@ export default function LoginFormPortal({ onClose, switchForm }: LoginFormProps)
     };
 
     return ReactDOM.createPortal(
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center z-60">
             <div
                 className="absolute inset-0 backdrop-blur-md bg-black/40"
                 onClick={onClose}
@@ -50,7 +41,7 @@ export default function LoginFormPortal({ onClose, switchForm }: LoginFormProps)
 
             <form
                 onSubmit={handleSubmit}
-                className="relative z-10 flex flex-col gap-4 bg-linear-to-br from-[#413030] to-[#5C3B3B] p-8 rounded-3xl shadow-2xl w-[350px] sm:w-[400px]"
+                className="relative z-70 flex flex-col gap-4 bg-linear-to-br from-[#413030] to-[#5C3B3B] p-8 rounded-3xl shadow-2xl w-[350px] sm:w-[400px]"
                 onClick={(e) => e.stopPropagation()}
             >
                 <h2 className="text-2xl font-semibold text-white text-center mb-4">

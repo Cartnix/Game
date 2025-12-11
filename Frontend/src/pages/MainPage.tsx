@@ -2,6 +2,7 @@ import { useState } from "react";
 import ButtonUI from "../shared/ui/ButtonUI";
 import LoginFormPortal from "../features/Autorisation/AutorisationForm";
 import RegistrationFormPortal from "../features/Registration/RegistrationForm";
+import Snowfall from "../features/ShowFall/ShowFall";
 
 export default function MainPage() {
 
@@ -14,6 +15,7 @@ export default function MainPage() {
 
     return (
         <main className="bg-[url('/mainBG.jpeg')] bg-cover bg-no-repeat w-full h-full min-h-screen min-w-screen items-center justify-center flex flex-col gap-8">
+            <Snowfall/>
             <h1 className="
                 text-6xl font-extrabold text-black
                 px-10 py-4 rounded-[50px]

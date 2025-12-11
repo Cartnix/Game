@@ -4,6 +4,7 @@ import { LevelsData } from "../../LevelCard/model/LevelsData";
 import { Play, Loader2, CheckCircle, Terminal } from "lucide-react";
 import usePyodide from "../../../features/Pyodide/usePyodide";
 import { CodeOutput } from "../../../widgets/ui/CodeEditor/ui/CodeOutput";
+import Countdown from "../../../features/Timer/ui/Timer";
 
 export default function TaskPage() {
   const { id } = useParams<{ id: string }>();
@@ -117,12 +118,15 @@ export default function TaskPage() {
             </>
           )}
         </button>
-        {/* Результаты показываем внизу левой панели только после запуска */}
+
         {hasRun && (
           <div className="mt-6">
             <CodeOutput output={output} error={error} />
           </div>
         )}
+      </div>
+      <div>
+        <Countdown start={30}/>
       </div>
     </div>
   );

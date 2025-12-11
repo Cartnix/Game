@@ -125,7 +125,7 @@ export default function LevelMap() {
       <div
         className={`
           fixed top-0 right-0 h-full w-96 bg-linear-to-b from-blue-900 to-blue-800
-          shadow-2xl z-40 transition-transform duration-300 ease-in-out
+          shadow-2xl z-70 transition-transform duration-300 ease-in-out
           ${currentLevel ? 'translate-x-0' : 'translate-x-full'}
           p-8 overflow-y-auto border-l-4 border-blue-600
         `}
@@ -195,10 +195,9 @@ export default function LevelMap() {
         )}
       </div>
 
-      {/* Оверлей для закрытия меню */}
       {currentLevel && (
         <div
-          className="fixed inset-0 bg-black/30 z-30 transition-opacity duration-300"
+          className="fixed inset-0 bg-black/30 z-60 transition-opacity duration-300"
           onClick={closeModal}
         />
       )}

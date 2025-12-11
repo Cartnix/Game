@@ -2,13 +2,13 @@ import { Route, Routes } from "react-router-dom"
 import MainPage from "./pages/MainPage"
 import MapPage from "./pages/MapPage"
 import LevelPage from "./pages/LevelPage"
-import Snowfall from "./features/ShowFall/ShowFall"
+import MusicPlayer from "./features/MusicPlayer/ui/MusicPlayer"
 
 function App() {
 
   return (
     <>
-      <Snowfall />
+      <MusicPlayer/>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/levels" element={<MapPage />} />
